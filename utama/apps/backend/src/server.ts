@@ -11,6 +11,7 @@ import { connectDB } from "@/db";
 import helmet from "helmet";
 import { apiRoutes } from "./routes/api.routes";
 import { StatusCodes } from "http-status-codes";
+import { studentRoute } from "./routes/student.routes";
 
 const app: Express = express();
 
@@ -29,13 +30,14 @@ app.use([httpLogger, addRequestId, logBodyRequests, logQueryParams]);
 await connectDB();
 // routes
 
-app.use(apiRoutes)
+app.use(apiRoutes);
+app.use("/v1/students", studentRoute);
 
 app.get("/", (req, res) => {
   res.status(StatusCodes.FORBIDDEN).json({
     status: false,
-    message: "Halaman ini tidak dapat di akses!"
-  })
+    message: "Halaman ini tidak dapat di akses!",
+  });
 });
 
 app.use(errorHandler);

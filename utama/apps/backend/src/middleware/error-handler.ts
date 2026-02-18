@@ -3,6 +3,8 @@ import { errorResponse } from "../utils/api-response";
 import { HttpException } from "../utils/http-exception";
 import { errorLogger, logger } from "@/logger";
 import { MessageType } from "@/types/response-type";
+import { ZodError } from "zod";
+import { StatusCodes } from "http-status-codes";
 
 export const errorHandler = (
   err: Error | HttpException,
@@ -22,6 +24,29 @@ export const errorHandler = (
     });
     return;
   }
-
+  if (err instanceof ZodError) {
+    const errors = err.issues.map((error) => ({
+      field: error.path.join("."),
+      message: error.message,
+    }));
+    logger.error({
+      error: err.message,
+      stack: err.stack,
+      path: req.path,
+      method: req.method,
+      ip: req.ip,
+      body: req.body,
+      params: req.params,
+      query: req.query,
+    });
+    errorResponse({
+      res,
+      message: "Validation error",
+      statusCode: StatusCodes.BAD_REQUEST,
+      data: errors,
+      type: MessageType.ERROR,
+    });
+    return;
+  }
   errorLogger(err, req, res, next);
 };
