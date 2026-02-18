@@ -1,20 +1,35 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeftCircleIcon } from 'lucide-react'
+import { StudentForm } from "@/components/StudentForm";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { FieldGroup, FieldSet } from "@/components/ui/field";
+import { useAppForm } from "@/hooks/form";
+import { studentSchema, StudentSchema } from "@/types/student-type";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeftCircleIcon, UserPlus2Icon } from "lucide-react";
 
-export const Route = createFileRoute('/create')({
+export const Route = createFileRoute("/create")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
+  const form = useAppForm({
+    defaultValues: {} as StudentSchema,
+    validators: {
+      onChange: studentSchema,
+    },
+  });
   return (
     <div className="min-h-screen max-w-full flex items-center justify-center">
       <Card className="w-200">
         <CardHeader>
-          <CardTitle>Tambah Guru Baru</CardTitle>
+          <CardTitle>Tambah Siswa Baru</CardTitle>
           <CardAction>
             <Button variant="outline" className="mr-2" size="sm" asChild>
               <Link to="/">
@@ -27,18 +42,17 @@ function RouteComponent() {
         <CardContent>
           <FieldGroup>
             <FieldSet>
-              <Field>
-                <FieldLabel htmlFor='nis'>NIS</FieldLabel>
-                <Input type='number' id="nis" name='nis' placeholder='Masukan nis ..' />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor='nama'>Nama</FieldLabel>
-                <Input type='text' id="nama" name='nama' placeholder='Masukan nama ..' />
-              </Field>
+              <StudentForm form={form} />
             </FieldSet>
           </FieldGroup>
         </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button variant="blue">
+            <UserPlus2Icon />
+            Tambah Siswa
+          </Button>
+        </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

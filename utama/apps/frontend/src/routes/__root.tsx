@@ -7,9 +7,9 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 
-
 import appCss from "../styles.css?url";
 import { QueryClient } from "@tanstack/react-query";
+import { DeleteDialog } from "@/components/dialog-delete";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -45,6 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <DeleteDialog />
         {children}
         <TanStackDevtools
           config={{

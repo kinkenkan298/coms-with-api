@@ -1,24 +1,21 @@
-
 import { MarsIcon, Trash2Icon, UserPenIcon, VenusIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 import { Badge } from "./ui/badge";
+import { GenderEnum, StudentSchema } from "@/types/student-type";
+import { Link } from "@tanstack/react-router";
+import { useBeingDeleted } from "@/store/delete-dialog-store";
 
-export enum GenderEnum {
-  MALE = "Laki Laki",
-  FEMALE = "Perempuan"
-}
-
-export interface Student {
-  nis: number;
-  nama: string;
-  umur: number;
-  kelas: string;
-  jenis_kelamin: GenderEnum;
-  no_telp: string;
-}
-
-export const StudentTable = ({ students }: { students: Student[] }) => {
+export const StudentTable = ({ students }: { students: StudentSchema[] }) => {
+  const setBeingDeleted = useBeingDeleted((state) => state.setBeingDeleted);
   return (
     <Table>
       <TableCaption>list all data siswa</TableCaption>
@@ -40,14 +37,17 @@ export const StudentTable = ({ students }: { students: Student[] }) => {
             <TableCell>{index + 1}</TableCell>
             <TableCell>{student.nis}</TableCell>
             <TableCell>{student.nama}</TableCell>
+            <TableCell>{student.umur}</TableCell>
+            <TableCell>{student.kelas}</TableCell>
             <TableCell>
-              {student.umur}
-            </TableCell>
-            <TableCell>
-              {student.kelas}
-            </TableCell>
-            <TableCell>
-              <Badge variant="secondary" className={student.jenis_kelamin === GenderEnum.MALE ? 'bg-blue-50 text-blue-500' : 'bg-pink-50 text-pink-500'}>
+              <Badge
+                variant="secondary"
+                className={
+                  student.jenis_kelamin === GenderEnum.MALE
+                    ? "bg-blue-50 text-blue-500"
+                    : "bg-pink-50 text-pink-500"
+                }
+              >
                 {student.jenis_kelamin === GenderEnum.MALE ? (
                   <>
                     <MarsIcon />
@@ -61,16 +61,24 @@ export const StudentTable = ({ students }: { students: Student[] }) => {
                 )}
               </Badge>
             </TableCell>
-            <TableCell>
-              {student.no_telp}
-            </TableCell>
+            <TableCell>{student.no_telp}</TableCell>
             <TableCell>
               <div className="flex gap-3">
-                <Button variant="outline">
-                  <UserPenIcon />
-                  Edit
+                <Button variant="warning" asChild>
+                  <Link to="/edit/$nis" params={{ nis: String(student.nis) }}>
+                    <UserPenIcon />
+                    Edit
+                  </Link>
                 </Button>
-                <Button variant="destructive">
+                <Button
+                  variant="destructive"
+                  onClick={() =>
+                    setBeingDeleted({
+                      nis: student.nis,
+                      name: student.nama,
+                    })
+                  }
+                >
                   <Trash2Icon />
                   Delete
                 </Button>
@@ -80,5 +88,5 @@ export const StudentTable = ({ students }: { students: Student[] }) => {
         ))}
       </TableBody>
     </Table>
-  )
-}
+  );
+};

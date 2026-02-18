@@ -1,21 +1,29 @@
-import { GenderEnum, Student, StudentTable } from "@/components/StudentsTable";
+import { StudentTable } from "@/components/StudentsTable";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { StudentSchema } from "@/types/student-type";
+import { GenderEnum } from "@/types/student-type";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { UserPlus2Icon } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: App });
 
 function App() {
-  const mockupSiswa: Student[] = [
+  const mockupSiswa: StudentSchema[] = [
     {
       nis: 10001,
       nama: "Ukasyah",
       kelas: "XII RPL 1",
       umur: 20,
       jenis_kelamin: GenderEnum.MALE,
-      no_telp: "081235123"
-    }
+      no_telp: 812,
+    },
   ];
   return (
     <>
