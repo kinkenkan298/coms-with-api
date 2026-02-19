@@ -1,3 +1,4 @@
+import { useCreateStudent } from "@/api/create-student";
 import { StudentForm } from "@/components/StudentForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,20 +10,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
+import { Spinner } from "@/components/ui/spinner";
 import { useAppForm } from "@/hooks/form";
 import { studentSchema, StudentSchema } from "@/types/student-type";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftCircleIcon, UserPlus2Icon } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeftCircleIcon, UserPlus, UserPlus2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/create")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const { mutateAsync: createStudentMutate, isPending } = useCreateStudent({
+    mutationConfig: {
+      onSuccess: () => {
+        toast.success("Berhasil membuat siswa!");
+        navigate({ to: "/" });
+      },
+    },
+  });
   const form = useAppForm({
     defaultValues: {} as StudentSchema,
     validators: {
       onChange: studentSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await createStudentMutate(value);
     },
   });
   return (
@@ -40,18 +55,30 @@ function RouteComponent() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <FieldGroup>
-            <FieldSet>
-              <StudentForm form={form} />
-            </FieldSet>
-          </FieldGroup>
+          <form
+            id="student-form"
+            onClick={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
+            <FieldGroup>
+              <FieldSet>
+                <StudentForm form={form} />
+              </FieldSet>
+            </FieldGroup>
+            <div className="flex justify-end mt-5">
+              <Button type="submit" variant="blue">
+                {isPending ? (
+                  <Spinner data-icon="inline-start" />
+                ) : (
+                  <UserPlus2Icon />
+                )}
+                Tambah siswa
+              </Button>
+            </div>
+          </form>
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button variant="blue">
-            <UserPlus2Icon />
-            Tambah Siswa
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

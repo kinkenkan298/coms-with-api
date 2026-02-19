@@ -5,7 +5,7 @@ import { studentSchema, StudentSchema } from "@/types/student-type";
 import { successResponse } from "@/utils/api-response";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { success, z } from "zod";
+import { z } from "zod";
 
 const studentRoute: Router = Router();
 

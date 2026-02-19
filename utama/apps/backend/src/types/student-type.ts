@@ -6,7 +6,7 @@ export enum GenderEnum {
 }
 
 export const studentSchema = z.object({
-  nis: z.number().check((ctx) => {
+  nis: z.number({ error: "NIS tidak valid!" }).check((ctx) => {
     if (ctx.value.toString().length !== 6) {
       ctx.issues.push({
         code: "custom",

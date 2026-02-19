@@ -11,9 +11,7 @@ export const studentSchema = z.object({
   umur: z.coerce.number<number>({ error: "Umur tidak valid!" }),
   kelas: z.string({ error: "Kelas tidak valid!" }),
   jenis_kelamin: z.enum(GenderEnum),
-  no_telp: z.coerce
-    .number<number>({ error: "No Telp tidak valid!" })
-    .max(18, { error: "Maximal Nomor telepon 18 digit!" }),
+  no_telp: z.coerce.number<number>({ error: "No Telp tidak valid!" }),
 });
 
 export type StudentSchema = z.infer<typeof studentSchema>;

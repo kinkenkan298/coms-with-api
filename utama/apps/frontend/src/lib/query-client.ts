@@ -25,20 +25,20 @@ export const queryClient: QueryClient = new QueryClient({
       },
     },
   },
-  mutationCache: new MutationCache({
-    onError: (error: unknown, _1, _2, mutation) => {
-      if (mutation?.meta?.disableGlobalErrorHandling) return;
-      if (typeof error === "string") {
-        toast.error(error);
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
-        toast.error((error as { message: string }).message);
-      }
-    },
-  }),
+  // mutationCache: new MutationCache({
+  //   onError: (error: unknown, _1, _2, mutation) => {
+  //     if (mutation?.meta?.disableGlobalErrorHandling) return;
+  //     if (typeof error === "string") {
+  //       toast.error(error);
+  //     } else if (
+  //       typeof error === "object" &&
+  //       error !== null &&
+  //       "message" in error
+  //     ) {
+  //       toast.error((error as { message: string }).message);
+  //     }
+  //   },
+  // }),
 });
 
 export type ApiFnReturnType<FnType extends (...args: any) => Promise<any>> =

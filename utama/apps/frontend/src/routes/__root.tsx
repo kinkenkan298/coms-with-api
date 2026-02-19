@@ -10,6 +10,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import appCss from "../styles.css?url";
 import { QueryClient } from "@tanstack/react-query";
 import { DeleteDialog } from "@/components/dialog-delete";
+import { Toaster } from "sonner";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -45,6 +46,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <Toaster richColors position="top-center" />
         <DeleteDialog />
         {children}
         <TanStackDevtools
