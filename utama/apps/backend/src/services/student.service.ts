@@ -3,6 +3,7 @@ import { StudentSchema } from "@/types/student-type";
 import { HttpException } from "@/utils/http-exception";
 import { StatusCodes } from "http-status-codes";
 import { logger } from "logger";
+import { DeleteResult } from "mongoose";
 
 class StudentsService {
   static async getAllStudents(): Promise<StudentSchema[]> {
@@ -36,6 +37,34 @@ class StudentsService {
       return newStudent;
     } catch (error) {
       logger.error("Terjadi kesalahan dalam membuat siswa");
+      throw error;
+    }
+  }
+  static async updateStudent(
+    nis: number,
+    student: Partial<StudentSchema>,
+  ): Promise<StudentSchema | null> {
+    logger.info("Update student nis: " + nis);
+    const updateStudent = await StudentModel.findOneAndUpdate(
+      { nis },
+      student,
+      { runValidators: true, returnDocument: "after" },
+    );
+    return updateStudent;
+  }
+  static async deleteStudent(nis: number): Promise<DeleteResult> {
+    try {
+      const existsStudent = await StudentModel.findOne({ nis });
+      if (!existsStudent) {
+        logger.warn("Data NIS : " + nis + " tidak ditemukan");
+        throw new HttpException(
+          StatusCodes.BAD_REQUEST,
+          "Data siswa yang ingin dihapus tidak ada!",
+        );
+      }
+      return await existsStudent.deleteOne();
+    } catch (error) {
+      logger.error("Error");
       throw error;
     }
   }
