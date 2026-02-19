@@ -33,7 +33,7 @@ export const StudentTable = ({ students }: { students: StudentSchema[] }) => {
       </TableHeader>
       <TableBody>
         {students.map((student, index) => (
-          <TableRow>
+          <TableRow key={student.nis}>
             <TableCell>{index + 1}</TableCell>
             <TableCell>{student.nis}</TableCell>
             <TableCell>{student.nama}</TableCell>

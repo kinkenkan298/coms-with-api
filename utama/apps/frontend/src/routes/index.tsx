@@ -1,3 +1,4 @@
+import { useGetStudent } from "@/api/get-student";
 import { StudentTable } from "@/components/StudentsTable";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,24 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { StudentSchema } from "@/types/student-type";
-import { GenderEnum } from "@/types/student-type";
+import { Spinner } from "@/components/ui/spinner";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { UserPlus2Icon } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({
+  component: App,
+});
 
 function App() {
-  const mockupSiswa: StudentSchema[] = [
-    {
-      nis: 10001,
-      nama: "Ukasyah",
-      kelas: "XII RPL 1",
-      umur: 20,
-      jenis_kelamin: GenderEnum.MALE,
-      no_telp: 812,
-    },
-  ];
+  const { data: students, isLoading } = useGetStudent();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen max-w-full flex items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
   return (
     <>
       <div className="min-h-screen max-w-full flex items-center justify-center">
@@ -41,7 +41,7 @@ function App() {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <StudentTable students={mockupSiswa} />
+            {students && <StudentTable students={students.data} />}
           </CardContent>
         </Card>
       </div>
