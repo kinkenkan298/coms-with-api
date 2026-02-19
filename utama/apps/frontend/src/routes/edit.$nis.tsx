@@ -45,13 +45,17 @@ function RouteComponent() {
               <StudentForm form={form} />
             </FieldSet>
           </FieldGroup>
+          <div className="flex justify-end mt-5">
+            <form.AppForm>
+              <form.SubmitButton
+                label="Edit siswa"
+                Icon={UserPenIcon}
+                variant="warning"
+              />
+            </form.AppForm>
+          </div>
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button variant="warning">
-            <UserPenIcon />
-            Edit Siswa
-          </Button>
-        </CardFooter>
+        <CardFooter className="flex justify-end"></CardFooter>
       </Card>
     </div>
   );

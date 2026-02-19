@@ -5,16 +5,14 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
-import { Spinner } from "@/components/ui/spinner";
 import { useAppForm } from "@/hooks/form";
 import { studentSchema, StudentSchema } from "@/types/student-type";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeftCircleIcon, UserPlus, UserPlus2Icon } from "lucide-react";
+import { ArrowLeftCircleIcon, UserPlus2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/create")({
@@ -23,7 +21,7 @@ export const Route = createFileRoute("/create")({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { mutateAsync: createStudentMutate, isPending } = useCreateStudent({
+  const { mutateAsync: createStudentMutate } = useCreateStudent({
     mutationConfig: {
       onSuccess: () => {
         toast.success("Berhasil membuat siswa!");
@@ -68,14 +66,13 @@ function RouteComponent() {
               </FieldSet>
             </FieldGroup>
             <div className="flex justify-end mt-5">
-              <Button type="submit" variant="blue">
-                {isPending ? (
-                  <Spinner data-icon="inline-start" />
-                ) : (
-                  <UserPlus2Icon />
-                )}
-                Tambah siswa
-              </Button>
+              <form.AppForm>
+                <form.SubmitButton
+                  label="Tambah siswa"
+                  Icon={UserPlus2Icon}
+                  variant="blue"
+                />
+              </form.AppForm>
             </div>
           </form>
         </CardContent>
