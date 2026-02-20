@@ -1,6 +1,7 @@
 import { StudentModel } from "@/models/student-model";
 import { GenderEnum, StudentSchema } from "@/types/student-type";
 import { HttpException } from "@/utils/http-exception";
+import { pushToClient } from "@/utils/push-to-client";
 import { StatusCodes } from "http-status-codes";
 import { logger } from "logger";
 import { DeleteResult } from "mongoose";
@@ -51,6 +52,8 @@ class StudentsService {
     const newStudent = await StudentModel.create({
       ...student,
     });
+
+    await pushToClient("CREATE", newStudent);
     return newStudent;
   }
   static async updateStudent(
@@ -69,6 +72,7 @@ class StudentsService {
         `Data NIS: ${nis} tidak ditemukan`,
       );
     }
+    await pushToClient("UPDATE", updateStudent);
     return updateStudent;
   }
   static async deleteStudent(nis: number): Promise<DeleteResult> {
@@ -81,7 +85,9 @@ class StudentsService {
           "Data siswa yang ingin dihapus tidak ada!",
         );
       }
-      return await existsStudent.deleteOne();
+      const data = await existsStudent.deleteOne();
+      await pushToClient("DELETE", existsStudent);
+      return data;
     } catch (error) {
       logger.error("Error");
       throw error;

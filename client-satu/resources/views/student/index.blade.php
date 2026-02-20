@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client 1 — Mirror Siswa Laki-laki</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            color: #2d3748;
+        }
+
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a3a6c, #2563eb);
+            color: white;
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.7rem;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .badge-server {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .info-bar {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-bar span {
+            font-size: 0.88rem;
+            color: #1d4ed8;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .refresh-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+        }
+
+        .stat-num {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+            color: #1a3a6c;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eff6ff;
+            padding: 11px 15px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1d4ed8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #bfdbfe;
+        }
+
+        td {
+            padding: 11px 15px;
+            border-bottom: 1px solid #f0f4f8;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #f8fbff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .badge-nis {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-kelas {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-laki {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .empty {
+            text-align: center;
+            color: #9ca3af;
+            padding: 40px !important;
+        }
+
+        .mirror-note {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-align: right;
+        }
+
+        .webhook-log {
+            margin-top: 20px;
+            background: #0f172a;
+            color: #a3e635;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+        }
+
+        .webhook-log h3 {
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .webhook-log p {
+            margin: 2px 0;
+        }
+    </style>
+
+    <meta http-equiv="refresh" content="15">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div>
+                <h1>♂ Client 1 — Mirror Siswa Laki-laki</h1>
+                <p>Data di-mirror dari Server Utama via Webhook • Port 8000</p>
+            </div>
+            <span class="badge-server">📡 Webhook Receiver</span>
+        </div>
+
+        @if(session('success'))
+            <div class="alert-success">✅ {{ session('success') }}</div>
+        @endif
+
+        <!-- INFO BAR -->
+        <div class="info-bar">
+            <span>🕐 Terakhir diupdate: <strong>{{ $lastUpdate }}</strong></span>
+            <span>⚡ Halaman auto-refresh setiap 15 detik</span>
+            <a href="/refresh" class="refresh-btn">🔄 Refresh dari Server Utama</a>
+        </div>
+
+        <!-- STAT -->
+        <div class="stat-box">
+            <div class="stat-icon">♂</div>
+            <div>
+                <div class="stat-num">{{ $total }}</div>
+                <div class="stat-label">Total Siswa Laki-laki (Mirror)</div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card">
+            <h2>📋 Daftar Siswa Laki-laki (Read Only Mirror)</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NIS</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Jenis Kelamin</th>
+                            <th>No. Telepon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($siswa as $index => $s)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td><span class="badge badge-nis">{{ $s['nis'] ?? '-' }}</span></td>
+                                <td><strong>{{ $s['nama'] ?? '-' }}</strong></td>
+                                <td><span class="badge badge-kelas">{{ $s['kelas'] ?? '-' }}</span></td>
+                                <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                                <td>{{ $s['no_telp'] ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="empty">
+                                    Belum ada data siswa laki-laki.<br>
+                                    <small>Data akan muncul otomatis saat server utama menambahkan siswa laki-laki.</small>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

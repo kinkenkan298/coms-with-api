@@ -66,6 +66,7 @@ studentRoute.put(
     async (req, res) => {
       const { nis } = req.params;
       const updatedStudent = await StudentsService.updateStudent(nis, req.body);
+
       successResponse({
         res,
         data: updatedStudent,
