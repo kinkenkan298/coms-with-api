@@ -23,8 +23,8 @@ export const useEditStudent = (params: EditStudentParams = {}) =>
   useMutation({
     mutationFn: editStudent,
     ...params.mutationConfig,
-    onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: getStudentQueryKey() });
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await queryClient.invalidateQueries({ queryKey: getStudentQueryKey() });
 
       params.mutationConfig?.onSuccess?.(
         data,
