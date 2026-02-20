@@ -8,6 +8,7 @@ const studentSchema = new Schema<StudentSchemaDocument>(
     nis: {
       type: Number,
       required: true,
+      unique: true,
     },
     nama: {
       type: String,
@@ -33,4 +34,7 @@ const studentSchema = new Schema<StudentSchemaDocument>(
   },
   { timestamps: true },
 );
-export const StudentModel = model<StudentSchema>("students", studentSchema);
+export const StudentModel = model<StudentSchemaDocument>(
+  "students",
+  studentSchema,
+);

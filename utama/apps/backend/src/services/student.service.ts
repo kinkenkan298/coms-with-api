@@ -18,56 +18,40 @@ class StudentsService {
   }
   static async getStudentByNis(nis: number): Promise<StudentSchema> {
     logger.info("Get Student nis : " + nis);
-    try {
-      const student = await StudentModel.findOne({ nis });
-      if (!student) {
-        throw new HttpException(
-          StatusCodes.BAD_REQUEST,
-          `Data NIS: ${nis} tidak ditemukan`,
-        );
-      }
-      return student;
-    } catch (error) {
-      throw error;
+    const student = await StudentModel.findOne({ nis });
+    if (!student) {
+      throw new HttpException(
+        StatusCodes.BAD_REQUEST,
+        `Data NIS: ${nis} tidak ditemukan`,
+      );
     }
+    return student;
   }
   static async getStudentByGender(
     gender: GenderEnum,
   ): Promise<StudentSchema[]> {
     logger.info("Get Student by gender " + gender);
-    try {
-      const data = await StudentModel.find({ jenis_kelamin: gender });
-      if (!data) {
-        throw new HttpException(
-          StatusCodes.BAD_REQUEST,
-          `Data siswa jenis kelamin ${gender} tidak ditemukan!`,
-        );
-      }
-      return data;
-    } catch (error) {
-      throw error;
+    const data = await StudentModel.find({ jenis_kelamin: gender });
+    if (data.length === 0) {
+      throw new HttpException(
+        StatusCodes.BAD_REQUEST,
+        `Data siswa jenis kelamin ${gender} tidak ditemukan!`,
+      );
     }
+    return data;
   }
   static async createStudent(student: StudentSchema): Promise<StudentSchema> {
     logger.info("Creating Student");
-    try {
-      const existsStudent = await StudentModel.findOne({ nis: student.nis });
-      if (existsStudent) {
-        logger.warn("Data siswa sudah ada!");
-        throw new HttpException(
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          "Data siswa sudah ada!",
-        );
-      }
-
-      const newStudent = await StudentModel.create({
-        ...student,
-      });
-      return newStudent;
-    } catch (error) {
-      logger.error("Terjadi kesalahan dalam membuat siswa");
-      throw error;
+    const existsStudent = await StudentModel.findOne({ nis: student.nis });
+    if (existsStudent) {
+      logger.warn("Data siswa sudah ada!");
+      throw new HttpException(StatusCodes.CONFLICT, "Data siswa sudah ada!");
     }
+
+    const newStudent = await StudentModel.create({
+      ...student,
+    });
+    return newStudent;
   }
   static async updateStudent(
     nis: number,
@@ -79,6 +63,12 @@ class StudentsService {
       student,
       { runValidators: true, returnDocument: "after" },
     );
+    if (!updateStudent) {
+      throw new HttpException(
+        StatusCodes.BAD_REQUEST,
+        `Data NIS: ${nis} tidak ditemukan`,
+      );
+    }
     return updateStudent;
   }
   static async deleteStudent(nis: number): Promise<DeleteResult> {

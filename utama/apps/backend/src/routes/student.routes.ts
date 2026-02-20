@@ -14,29 +14,22 @@ const nisSchema = z.object({
 
 studentRoute.get(
   "/",
-  asyncHandler(async (req, res) => {
+  asyncHandler<{}, {}, { gender: "MALE" | "FEMALE" }, {}>(async (req, res) => {
+    if (req.query.gender) {
+      const gender = GenderEnum[req.query.gender];
+      const data = await StudentsService.getStudentByGender(gender);
+
+      successResponse({
+        res,
+        data,
+      });
+      return;
+    }
+
     const data = await StudentsService.getAllStudents();
     successResponse({
       res,
       message: "Berhasil mendapatkan data siswa",
-      data,
-    });
-  }),
-);
-studentRoute.get(
-  "/gender",
-  validate(
-    z.object({
-      gender: z.enum(GenderEnum),
-    }),
-    "query",
-  ),
-  asyncHandler<{}, {}, { gender: GenderEnum }, {}>(async (req, res) => {
-    const { gender } = req.query;
-    const data = await StudentsService.getStudentByGender(gender);
-
-    successResponse({
-      res,
       data,
     });
   }),
