@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client 1 — Mirror Siswa Laki-laki</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         * {
@@ -230,7 +231,46 @@
         }
     </style>
 
-    <meta http-equiv="refresh" content="15">
+    {{--
+    <meta http-equiv="refresh" content="15"> --}}
+    <script>
+        window.addEventListener("load", () => {
+            console.log("Client siap menerima update via WebSocket...");
+            window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
+                console.log('Event diterima:', payload.event);
+                const data = await fetch('/data').then(res => res.json());
+                console.log('Data terbaru dari server:', data);
+                renderTable(data);
+            })
+            function renderTable(data) {
+                const table = document.getElementById("student-table-body");
+                table.innerHTML = "";
+                if (data.length === 0) {
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty">
+                                Belum ada data siswa laki-laki.<br>
+                                <small>Data akan muncul otomatis saat server utama menambahkan siswa laki-laki.</small>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                data.forEach((s, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><span class="badge badge-nis">${s.nis || '-'}</span></td>
+                        <td><strong>${s.nama || '-'}</strong></td>
+                        <td><span class="badge badge-kelas">${s.kelas || '-'}</span></td>
+                        <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                        <td>${s.no_telp || '-'}</td>
+                    `;
+                    table.appendChild(row);
+                });
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -252,8 +292,7 @@
         <!-- INFO BAR -->
         <div class="info-bar">
             <span>🕐 Terakhir diupdate: <strong>{{ $lastUpdate }}</strong></span>
-            <span>⚡ Halaman auto-refresh setiap 15 detik</span>
-            <a href="/refresh" class="refresh-btn">🔄 Refresh dari Server Utama</a>
+            <a href="{{ route("student.refresh") }}" class="refresh-btn">🔄 Refresh dari Server Utama</a>
         </div>
 
         <!-- STAT -->
@@ -280,7 +319,7 @@
                             <th>No. Telepon</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="student-table-body">
                         @forelse($siswa as $index => $s)
                             <tr>
                                 <td>{{ $index + 1 }}</td>

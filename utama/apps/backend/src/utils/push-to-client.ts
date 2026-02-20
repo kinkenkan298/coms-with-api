@@ -15,7 +15,9 @@ export const pushToClient = async (event: EventType, data: StudentSchema) => {
   ];
   for (const client of clients) {
     try {
-      await axios.post(client.url!, payload);
+      await axios.post(client.url!, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
       logger.info(
         `${client.name} Data pushed successfully: ${JSON.stringify(payload)}`,
       );
