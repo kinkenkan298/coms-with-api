@@ -1,9 +1,23 @@
 import { withForm } from "@/hooks/form";
 import { GenderEnum, StudentSchema } from "@/types/student-type";
 
+const defaultValues: StudentSchema = {
+  nis: 0,
+  nama: "",
+  umur: 0,
+  kelas: "",
+  jenis_kelamin: GenderEnum.MALE,
+  no_telp: "",
+};
+
+type FormType = "create" | "edit";
+
 export const StudentForm = withForm({
-  defaultValues: {} as StudentSchema,
-  render: ({ form }) => (
+  defaultValues,
+  props: {
+    mode: "edit",
+  },
+  render: ({ form, mode }) => (
     <div className="grid gap-2 grid-cols-2">
       <form.AppField
         name="nis"
@@ -11,7 +25,7 @@ export const StudentForm = withForm({
           <field.TextField
             label="NIS"
             placeholder="Masukan NIS ..."
-            maxLength={6}
+            disabled={mode === "edit"}
           />
         )}
       />
@@ -24,11 +38,7 @@ export const StudentForm = withForm({
       <form.AppField
         name="umur"
         children={(field) => (
-          <field.TextField
-            label="Umur"
-            placeholder="Masukan Umur ..."
-            maxLength={2}
-          />
+          <field.TextField label="Umur" placeholder="Masukan Umur ..." />
         )}
       />
       <form.AppField
@@ -61,7 +71,6 @@ export const StudentForm = withForm({
           <field.TextField
             label="No Telp"
             placeholder="Masukan Nomor Telepon ..."
-            maxLength={18}
           />
         )}
       />

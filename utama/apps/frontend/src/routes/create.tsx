@@ -55,14 +55,14 @@ function RouteComponent() {
         <CardContent>
           <form
             id="student-form"
-            onClick={(e) => {
+            onSubmit={(e) => {
               e.preventDefault();
               form.handleSubmit();
             }}
           >
             <FieldGroup>
               <FieldSet>
-                <StudentForm form={form} />
+                <StudentForm form={form} mode="create" />
               </FieldSet>
             </FieldGroup>
             <div className="flex justify-end mt-5">

@@ -1,3 +1,5 @@
+import { useEditStudent } from "@/api/edit-student";
+import { getStudentByNisQueryOptions } from "@/api/get-student-by-nip";
 import { StudentForm } from "@/components/StudentForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,19 +12,42 @@ import {
 } from "@/components/ui/card";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form";
-import { studentSchema, StudentSchema } from "@/types/student-type";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { studentSchema } from "@/types/student-type";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftCircleIcon, UserPenIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/edit/$nis")({
   component: RouteComponent,
+  loader: async ({ params, context }) => {
+    await context.queryClient.ensureQueryData(
+      getStudentByNisQueryOptions(Number(params.nis)),
+    );
+  },
 });
 
 function RouteComponent() {
+  const { nis } = Route.useParams();
+  const { data: student } = useSuspenseQuery(
+    getStudentByNisQueryOptions(Number(nis)),
+  );
+  const navigate = useNavigate();
+  const { mutateAsync: editStudentMutate } = useEditStudent({
+    mutationConfig: {
+      onSuccess: () => {
+        toast.success("Berhasil membuat siswa!");
+        navigate({ to: "/" });
+      },
+    },
+  });
   const form = useAppForm({
-    defaultValues: {} as StudentSchema,
+    defaultValues: student.data,
     validators: {
       onChange: studentSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await editStudentMutate({ nis: Number(nis), student: value });
     },
   });
   return (
@@ -40,20 +65,28 @@ function RouteComponent() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <FieldGroup>
-            <FieldSet>
-              <StudentForm form={form} />
-            </FieldSet>
-          </FieldGroup>
-          <div className="flex justify-end mt-5">
-            <form.AppForm>
-              <form.SubmitButton
-                label="Edit siswa"
-                Icon={UserPenIcon}
-                variant="warning"
-              />
-            </form.AppForm>
-          </div>
+          <form
+            id="student-form-edit"
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
+            <FieldGroup>
+              <FieldSet>
+                <StudentForm form={form} mode="edit" />
+              </FieldSet>
+            </FieldGroup>
+            <div className="flex justify-end mt-5">
+              <form.AppForm>
+                <form.SubmitButton
+                  label="Edit siswa"
+                  Icon={UserPenIcon}
+                  variant="warning"
+                />
+              </form.AppForm>
+            </div>
+          </form>
         </CardContent>
         <CardFooter className="flex justify-end"></CardFooter>
       </Card>

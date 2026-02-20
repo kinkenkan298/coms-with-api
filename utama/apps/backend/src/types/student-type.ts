@@ -6,18 +6,10 @@ export enum GenderEnum {
 }
 
 export const studentSchema = z.object({
-  nis: z.number({ error: "NIS tidak valid!" }).check((ctx) => {
-    if (ctx.value.toString().length !== 6) {
-      ctx.issues.push({
-        code: "custom",
-        maximum: 6,
-        origin: "number",
-        inclusive: true,
-        message: "NIP harus 6 angka",
-        input: ctx.value,
-      });
-    }
-  }),
+  nis: z.coerce
+    .number({ error: "NIS tidak valid!" })
+    .min(100000, { error: "NIS hanya dapat 6 digit!" })
+    .max(999999, { error: "NIS hanya dapat 6 digit!" }),
   nama: z.string({ error: "Nama tidak valid!" }),
   umur: z.coerce.number<number>({ error: "Umur tidak valid!" }),
   kelas: z.string({ error: "Kelas tidak valid!" }),

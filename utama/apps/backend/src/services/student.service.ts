@@ -1,5 +1,5 @@
 import { StudentModel } from "@/models/student-model";
-import { StudentSchema } from "@/types/student-type";
+import { GenderEnum, StudentSchema } from "@/types/student-type";
 import { HttpException } from "@/utils/http-exception";
 import { StatusCodes } from "http-status-codes";
 import { logger } from "logger";
@@ -9,14 +9,43 @@ class StudentsService {
   static async getAllStudents(): Promise<StudentSchema[]> {
     logger.info("Get all students");
     try {
-      const students = await StudentModel.find().sort({ createdAt: -1 });
+      const students = await StudentModel.find().sort({ nis: 1 });
       return students;
-    } catch {
+    } catch (error) {
       logger.error("Failed to get all students");
-      throw new HttpException(
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        "Gagal mendapatkan semua siswa",
-      );
+      throw error;
+    }
+  }
+  static async getStudentByNis(nis: number): Promise<StudentSchema> {
+    logger.info("Get Student nis : " + nis);
+    try {
+      const student = await StudentModel.findOne({ nis });
+      if (!student) {
+        throw new HttpException(
+          StatusCodes.BAD_REQUEST,
+          `Data NIS: ${nis} tidak ditemukan`,
+        );
+      }
+      return student;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getStudentByGender(
+    gender: GenderEnum,
+  ): Promise<StudentSchema[]> {
+    logger.info("Get Student by gender " + gender);
+    try {
+      const data = await StudentModel.find({ jenis_kelamin: gender });
+      if (!data) {
+        throw new HttpException(
+          StatusCodes.BAD_REQUEST,
+          `Data siswa jenis kelamin ${gender} tidak ditemukan!`,
+        );
+      }
+      return data;
+    } catch (error) {
+      throw error;
     }
   }
   static async createStudent(student: StudentSchema): Promise<StudentSchema> {

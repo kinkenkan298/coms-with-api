@@ -7,20 +7,21 @@ import { getStudentQueryKey } from "./get-student";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 
-const createStudent = async (student: StudentSchema) => {
-  const { data } = await axiosInstance.post<ApiResponse<StudentSchema>>(
-    "/students",
+const editStudent = async (params: { student: StudentSchema; nis: number }) => {
+  const { student, nis } = params;
+  const { data } = await axiosInstance.put<ApiResponse<StudentSchema>>(
+    "/students/" + nis,
     student,
   );
   return data;
 };
 
-type CreateStudentParams = {
-  mutationConfig?: MutationConfig<typeof createStudent>;
+type EditStudentParams = {
+  mutationConfig?: MutationConfig<typeof editStudent>;
 };
-export const useCreateStudent = (params: CreateStudentParams = {}) =>
+export const useEditStudent = (params: EditStudentParams = {}) =>
   useMutation({
-    mutationFn: createStudent,
+    mutationFn: editStudent,
     ...params.mutationConfig,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: getStudentQueryKey() });
