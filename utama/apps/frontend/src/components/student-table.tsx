@@ -5,6 +5,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
@@ -29,6 +30,10 @@ export const StudentsTable = <TData, TValue>({
   data,
 }: StudentTableProps<TData, TValue>) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const table = useReactTable({
     data,
     columns,
@@ -40,7 +45,9 @@ export const StudentsTable = <TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
+      pagination,
     },
+    onPaginationChange: setPagination,
   });
   return (
     <>
