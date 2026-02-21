@@ -1,5 +1,8 @@
 import { useEditStudent } from "@/api/edit-student";
-import { getStudentByNisQueryOptions } from "@/api/get-student-by-nip";
+import {
+  getStudentByNisQueryKey,
+  getStudentByNisQueryOptions,
+} from "@/api/get-student-by-nip";
 import { StudentForm } from "@/components/StudentForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +16,7 @@ import {
 import { FieldGroup, FieldSet } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form";
 import { studentSchema } from "@/types/student-type";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftCircleIcon, UserPenIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -33,10 +36,14 @@ function RouteComponent() {
     getStudentByNisQueryOptions(Number(nis)),
   );
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { mutateAsync: editStudentMutate } = useEditStudent({
     mutationConfig: {
       onSuccess: () => {
-        toast.success("Berhasil membuat siswa!");
+        queryClient.invalidateQueries({
+          queryKey: getStudentByNisQueryKey(Number(nis)),
+        });
+        toast.success("Berhasil mengubah siswa!");
         navigate({ to: "/" });
       },
     },
