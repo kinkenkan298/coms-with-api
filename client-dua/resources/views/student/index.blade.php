@@ -232,7 +232,8 @@
 
     <script>
         window.addEventListener("load", () => {
-            window.Echo.channel("SiswaChannels").listen(".siswa.update", async payload => {
+            console.log("Client siap menerima update via WebSocket...");
+            window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
                 const data = await fetch("/data").then(res => res.json());
                 renderTable(data);
             })
