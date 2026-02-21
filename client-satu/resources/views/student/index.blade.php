@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client 1 — Mirror Siswa Laki-laki</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -237,9 +238,9 @@
         window.addEventListener("load", () => {
             console.log("Client siap menerima update via WebSocket...");
             window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
-                console.log('Event diterima:', payload.event);
                 const data = await fetch('/data').then(res => res.json());
-                console.log('Data terbaru dari server:', data);
+                const statNum = document.getElementById("stat-num");
+                statNum.textContent = data.length;
                 renderTable(data);
             })
 
@@ -263,6 +264,7 @@
                         <td>${index + 1}</td>
                         <td><span class="badge badge-nis">${s.nis || '-'}</span></td>
                         <td><strong>${s.nama || '-'}</strong></td>
+                        <td><span class="badge badge-umur">${s.umur ?? '-' }</span></td>
                         <td><span class="badge badge-kelas">${s.kelas || '-'}</span></td>
                         <td><span class="badge badge-laki">♂ Laki-laki</span></td>
                         <td>${s.no_telp || '-'}</td>
@@ -280,34 +282,35 @@
         <!-- HEADER -->
         <div class="header">
             <div>
-                <h1>♂ Client 1 — Mirror Siswa Laki-laki</h1>
+                <h1><i class="bi bi-gender-male"></i> Client 1 — Mirror Siswa Laki-laki</h1>
                 <p>Data di-mirror dari Server Utama via Webhook • Port 8000</p>
             </div>
             <span class="badge-server">📡 Webhook Receiver</span>
         </div>
 
         @if (session('success'))
-            <div class="alert-success">✅ {{ session('success') }}</div>
+            <div class="alert-success"><i class="bi bi-check-circle-fill"></i> {{ session('success') }}</div>
         @endif
 
         <!-- INFO BAR -->
         <div class="info-bar">
-            <span>🕐 Terakhir diupdate: <strong>{{ $lastUpdate }}</strong></span>
-            <a href="{{ route('student.refresh') }}" class="refresh-btn">🔄 Refresh dari Server Utama</a>
+            <span><i class="bi bi-clock"></i> Terakhir diupdate: <strong>{{ $lastUpdate }}</strong></span>
+            <a href="{{ route('student.refresh') }}" class="refresh-btn"><i class="bi bi-arrow-clockwise"></i> Refresh
+                dari Server Utama</a>
         </div>
 
         <!-- STAT -->
         <div class="stat-box">
             <div class="stat-icon">♂</div>
             <div>
-                <div class="stat-num">{{ $total }}</div>
+                <div class="stat-num" id="stat-num">{{ $total }}</div>
                 <div class="stat-label">Total Siswa Laki-laki (Mirror)</div>
             </div>
         </div>
 
         <!-- TABLE -->
         <div class="card">
-            <h2>📋 Daftar Siswa Laki-laki (Read Only Mirror)</h2>
+            <h2><i class="bi bi-list"></i> Daftar Siswa Laki-laki</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>

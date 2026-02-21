@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client 2 — Mirror Siswa Perempuan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         * {
@@ -195,39 +196,6 @@
             background: #fdf2f8;
             color: #9d174d;
         }
-
-        .empty {
-            text-align: center;
-            color: #9ca3af;
-            padding: 40px !important;
-        }
-
-        .mirror-note {
-            margin-top: 16px;
-            font-size: 0.8rem;
-            color: #6b7280;
-            text-align: right;
-        }
-
-        .webhook-log {
-            margin-top: 20px;
-            background: #0f172a;
-            color: #f9a8d4;
-            border-radius: 10px;
-            padding: 16px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.82rem;
-        }
-
-        .webhook-log h3 {
-            color: #94a3b8;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-
-        .webhook-log p {
-            margin: 2px 0;
-        }
     </style>
 
     <script>
@@ -235,6 +203,8 @@
             console.log("Client siap menerima update via WebSocket...");
             window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
                 const data = await fetch("/data").then(res => res.json());
+                const statNum = document.getElementById("stat-num");
+                statNum.textContent = data.length;
                 renderTable(data);
             })
 
@@ -258,6 +228,7 @@
                         <td>${index + 1}</td>
                         <td><span class="badge badge-nis">${s.nis || '-'}</span></td>
                         <td><strong>${s.nama || '-'}</strong></td>
+                        <td><span class="badge badge-umur">${s.umur ?? '-' }</span></td>
                         <td><span class="badge badge-kelas">${s.kelas || '-'}</span></td>
                         <td><span class="badge badge-laki">♂ Laki-laki</span></td>
                         <td>${s.no_telp || '-'}</td>
@@ -275,26 +246,30 @@
         <!-- HEADER -->
         <div class="header">
             <div>
-                <h1>♀ Client 2 — Mirror Siswa Perempuan</h1>
-                <p>Data di-mirror dari Server Utama via Webhook • Port 8002</p>
+                <h1><i class="bi bi-gender-female"></i> Client 2 — Mirror Siswa Perempuan</h1>
+                <p>Data di-mirror dari Server Utama via Webhook • Port 8001</p>
             </div>
             <span class="badge-server">📡 Webhook Receiver</span>
         </div>
 
         @if (session('success'))
-            <div class="alert-success">✅ {{ session('success') }}</div>
+            <div class="alert-success"><i class="bi bi-check-circle-fill"></i> {{ session('success') }}</div>
         @endif
 
         <!-- INFO BAR -->
         <div class="info-bar">
-            <span>🕐 Terakhir diupdate: <strong>{{ $last_updated }}</strong></span>
-            <span>⚡ Halaman auto-refresh setiap 15 detik</span>
-            <a href="{{ route('students.refresh') }}" class="refresh-btn">🔄 Refresh dari Server Utama</a>
+            <span><i class="bi bi-clock"></i> diupdate: <strong>{{ $last_updated }}</strong></span>
+            <a href="{{ route('students.refresh') }}" class="refresh-btn">
+                <i class="bi bi-arrow-clockwise"></i>
+                Refresh dari Server Utama
+            </a>
         </div>
 
         <!-- STAT -->
         <div class="stat-box">
-            <div class="stat-icon">♀</div>
+            <div class="stat-icon">
+                <i class="bi bi-gender-female"></i>
+            </div>
             <div>
                 <div class="stat-num">{{ $total }}</div>
                 <div class="stat-label">Total Siswa Perempuan (Mirror)</div>
@@ -303,7 +278,7 @@
 
         <!-- TABLE -->
         <div class="card">
-            <h2>📋 Daftar Siswa Perempuan</h2>
+            <h2><i class="bi bi-list"></i> Daftar Siswa Perempuan</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
