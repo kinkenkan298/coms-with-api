@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client 1 — Mirror Siswa Laki-laki</title>
+    <title>Client 2 — Mirror Siswa Perempuan</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <style>
         * {
             box-sizing: border-box;
@@ -16,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #f0f4f8;
+            background: #fdf2f8;
             color: #2d3748;
         }
 
@@ -27,7 +26,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #1a3a6c, #2563eb);
+            background: linear-gradient(135deg, #831843, #db2777);
             color: white;
             border-radius: 16px;
             padding: 24px 32px;
@@ -37,7 +36,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 20px rgba(219, 39, 119, 0.3);
         }
 
         .header h1 {
@@ -59,8 +58,8 @@
         }
 
         .info-bar {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
+            background: #fdf2f8;
+            border: 1px solid #fbcfe8;
             border-radius: 12px;
             padding: 14px 20px;
             margin-bottom: 20px;
@@ -73,7 +72,7 @@
 
         .info-bar span {
             font-size: 0.88rem;
-            color: #1d4ed8;
+            color: #9d174d;
         }
 
         .alert-success {
@@ -86,7 +85,7 @@
         }
 
         .refresh-btn {
-            background: #2563eb;
+            background: #db2777;
             color: white;
             border: none;
             border-radius: 8px;
@@ -100,7 +99,7 @@
         }
 
         .refresh-btn:hover {
-            background: #1d4ed8;
+            background: #be185d;
         }
 
         .stat-box {
@@ -121,7 +120,7 @@
         .stat-num {
             font-size: 2.2rem;
             font-weight: 700;
-            color: #2563eb;
+            color: #db2777;
         }
 
         .stat-label {
@@ -139,7 +138,7 @@
         .card h2 {
             font-size: 1.05rem;
             margin-bottom: 16px;
-            color: #1a3a6c;
+            color: #831843;
         }
 
         .table-wrapper {
@@ -152,26 +151,26 @@
         }
 
         th {
-            background: #eff6ff;
+            background: #fdf2f8;
             padding: 11px 15px;
             text-align: left;
             font-size: 0.8rem;
             font-weight: 700;
-            color: #1d4ed8;
+            color: #9d174d;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid #bfdbfe;
+            border-bottom: 2px solid #fbcfe8;
         }
 
         td {
             padding: 11px 15px;
-            border-bottom: 1px solid #f0f4f8;
+            border-bottom: 1px solid #fdf2f8;
             font-size: 0.9rem;
             vertical-align: middle;
         }
 
         tr:hover td {
-            background: #f8fbff;
+            background: #fff1f7;
         }
 
         .badge {
@@ -183,8 +182,8 @@
         }
 
         .badge-nis {
-            background: #dbeafe;
-            color: #1d4ed8;
+            background: #fce7f3;
+            color: #9d174d;
         }
 
         .badge-kelas {
@@ -192,9 +191,9 @@
             color: #065f46;
         }
 
-        .badge-laki {
-            background: #eff6ff;
-            color: #1d4ed8;
+        .badge-perempuan {
+            background: #fdf2f8;
+            color: #9d174d;
         }
 
         .empty {
@@ -213,7 +212,7 @@
         .webhook-log {
             margin-top: 20px;
             background: #0f172a;
-            color: #a3e635;
+            color: #f9a8d4;
             border-radius: 10px;
             padding: 16px;
             font-family: 'Courier New', monospace;
@@ -231,15 +230,10 @@
         }
     </style>
 
-    {{--
-    <meta http-equiv="refresh" content="15"> --}}
     <script>
         window.addEventListener("load", () => {
-            console.log("Client siap menerima update via WebSocket...");
-            window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
-                console.log('Event diterima:', payload.event);
-                const data = await fetch('/data').then(res => res.json());
-                console.log('Data terbaru dari server:', data);
+            window.Echo.channel("SiswaChannels").listen(".siswa.update", async payload => {
+                const data = await fetch("/data").then(res => res.json());
                 renderTable(data);
             })
 
@@ -270,7 +264,7 @@
                     table.appendChild(row);
                 });
             }
-        });
+        })
     </script>
 </head>
 
@@ -280,8 +274,8 @@
         <!-- HEADER -->
         <div class="header">
             <div>
-                <h1>♂ Client 1 — Mirror Siswa Laki-laki</h1>
-                <p>Data di-mirror dari Server Utama via Webhook • Port 8000</p>
+                <h1>♀ Client 2 — Mirror Siswa Perempuan</h1>
+                <p>Data di-mirror dari Server Utama via Webhook • Port 8002</p>
             </div>
             <span class="badge-server">📡 Webhook Receiver</span>
         </div>
@@ -292,22 +286,23 @@
 
         <!-- INFO BAR -->
         <div class="info-bar">
-            <span>🕐 Terakhir diupdate: <strong>{{ $lastUpdate }}</strong></span>
-            <a href="{{ route('student.refresh') }}" class="refresh-btn">🔄 Refresh dari Server Utama</a>
+            <span>🕐 Terakhir diupdate: <strong>{{ $last_updated }}</strong></span>
+            <span>⚡ Halaman auto-refresh setiap 15 detik</span>
+            <a href="{{ route('students.refresh') }}" class="refresh-btn">🔄 Refresh dari Server Utama</a>
         </div>
 
         <!-- STAT -->
         <div class="stat-box">
-            <div class="stat-icon">♂</div>
+            <div class="stat-icon">♀</div>
             <div>
                 <div class="stat-num">{{ $total }}</div>
-                <div class="stat-label">Total Siswa Laki-laki (Mirror)</div>
+                <div class="stat-label">Total Siswa Perempuan (Mirror)</div>
             </div>
         </div>
 
         <!-- TABLE -->
         <div class="card">
-            <h2>📋 Daftar Siswa Laki-laki (Read Only Mirror)</h2>
+            <h2>📋 Daftar Siswa Perempuan</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -329,15 +324,15 @@
                                 <td><strong>{{ $s['nama'] ?? '-' }}</strong></td>
                                 <td><span class="badge badge-umur">{{ $s['umur'] ?? '-' }}</span></td>
                                 <td><span class="badge badge-kelas">{{ $s['kelas'] ?? '-' }}</span></td>
-                                <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                                <td><span class="badge badge-perempuan">♀ Perempuan</span></td>
                                 <td>{{ $s['no_telp'] ?? '-' }}</td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="7" class="empty">
-                                    Belum ada data siswa laki-laki.<br>
+                                    Belum ada data siswa perempuan.<br>
                                     <small>Data akan muncul otomatis saat server utama menambahkan siswa
-                                        laki-laki.</small>
+                                        perempuan.</small>
                                 </td>
                             </tr>
                         @endforelse
