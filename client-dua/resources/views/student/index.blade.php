@@ -202,6 +202,7 @@
         window.addEventListener("load", () => {
             console.log("Client siap menerima update via WebSocket...");
             window.Echo.channel("SiswaChannel").listen(".siswa.update", async (payload) => {
+                console.log("Data siswa terbaru diterima via WebSocket:", payload);
                 const data = await fetch("/data").then(res => res.json());
                 const statNum = document.getElementById("stat-num");
                 statNum.textContent = data.length;
@@ -215,8 +216,8 @@
                     table.innerHTML = `
                         <tr>
                             <td colspan="7" class="empty">
-                                Belum ada data siswa laki-laki.<br>
-                                <small>Data akan muncul otomatis saat server utama menambahkan siswa laki-laki.</small>
+                                Belum ada data siswa perempuan.<br>
+                                <small>Data akan muncul otomatis saat server utama menambahkan siswa perempuan.</small>
                             </td>
                         </tr>
                     `;
@@ -230,7 +231,7 @@
                         <td><strong>${s.nama || '-'}</strong></td>
                         <td><span class="badge badge-umur">${s.umur ?? '-' }</span></td>
                         <td><span class="badge badge-kelas">${s.kelas || '-'}</span></td>
-                        <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                        <td><span class="badge badge-perempuan"><i class="bi bi-gender-female"></i> Perempuan</span></td>
                         <td>${s.no_telp || '-'}</td>
                     `;
                     table.appendChild(row);
@@ -271,7 +272,7 @@
                 <i class="bi bi-gender-female"></i>
             </div>
             <div>
-                <div class="stat-num">{{ $total }}</div>
+                <div class="stat-num" id="stat-num">{{ $total }}</div>
                 <div class="stat-label">Total Siswa Perempuan (Mirror)</div>
             </div>
         </div>
@@ -300,7 +301,8 @@
                                 <td><strong>{{ $s['nama'] ?? '-' }}</strong></td>
                                 <td><span class="badge badge-umur">{{ $s['umur'] ?? '-' }}</span></td>
                                 <td><span class="badge badge-kelas">{{ $s['kelas'] ?? '-' }}</span></td>
-                                <td><span class="badge badge-perempuan">♀ Perempuan</span></td>
+                                <td><span class="badge badge-perempuan"><i class="bi bi-gender-female"></i>
+                                        Perempuan</span></td>
                                 <td>{{ $s['no_telp'] ?? '-' }}</td>
                             </tr>
                         @empty

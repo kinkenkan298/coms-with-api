@@ -266,7 +266,7 @@
                         <td><strong>${s.nama || '-'}</strong></td>
                         <td><span class="badge badge-umur">${s.umur ?? '-' }</span></td>
                         <td><span class="badge badge-kelas">${s.kelas || '-'}</span></td>
-                        <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                        <td><span class="badge badge-laki"><i class="bi bi-gender-male"></i> Laki-laki</span></td>
                         <td>${s.no_telp || '-'}</td>
                     `;
                     table.appendChild(row);
@@ -332,7 +332,8 @@
                                 <td><strong>{{ $s['nama'] ?? '-' }}</strong></td>
                                 <td><span class="badge badge-umur">{{ $s['umur'] ?? '-' }}</span></td>
                                 <td><span class="badge badge-kelas">{{ $s['kelas'] ?? '-' }}</span></td>
-                                <td><span class="badge badge-laki">♂ Laki-laki</span></td>
+                                <td><span class="badge badge-laki"><i class="bi bi-gender-male"></i> Laki-laki</span>
+                                </td>
                                 <td>{{ $s['no_telp'] ?? '-' }}</td>
                             </tr>
                         @empty
