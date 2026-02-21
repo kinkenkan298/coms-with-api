@@ -10,8 +10,6 @@ const defaultValues: StudentSchema = {
   no_telp: "",
 };
 
-type FormType = "create" | "edit";
-
 export const StudentForm = withForm({
   defaultValues,
   props: {

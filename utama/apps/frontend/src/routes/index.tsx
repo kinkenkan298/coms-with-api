@@ -1,5 +1,6 @@
 import { useGetStudent } from "@/api/get-student";
-import { StudentTable } from "@/components/StudentsTable";
+import { columns } from "@/components/columns";
+import { StudentsTable } from "@/components/student-table";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -41,7 +42,9 @@ function App() {
             </CardAction>
           </CardHeader>
           <CardContent>
-            {students && <StudentTable students={students.data} />}
+            {students && (
+              <StudentsTable columns={columns} data={students.data} />
+            )}
           </CardContent>
         </Card>
       </div>
